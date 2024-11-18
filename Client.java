@@ -37,16 +37,18 @@ public class Client{
         out.close();
     }
 
-    public void request(String num){
-        //what does request do?
-        //return String? void?
-        System.out.println(num);
-        return;
+    public String request(String num) throws IOException{
+        out.println(num);//sending the number to the server
+        out.flush(); 
+
+        String numFactors = in.readLine();//reads response from the server.
+        //request is going to be requestiing the calculation that the server does (by itself) 
+        return "The number " + num + " has " + numFactors + " factors"; 
+        //ex: "The number 47483647 has 4 factors
     }
 
     public Socket getSocket(){
         return client; 
     }
-
 
 }

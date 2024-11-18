@@ -5,13 +5,14 @@ import java.net.*;
 import java.util.*;
 
 public class Server{
-    protected ServerSocket serverSocket; 
-    protected ArrayList<LocalDateTime> times;
+    public static class serverThread extends Thread {
+        private ServerSocket serverSocket; 
+        private ArrayList<LocalDateTime> times;
 
-    public Server(int port) throws IOException{
-        serverSocket = new ServerSocket(port);
-        times = new ArrayList<>(getConnectedTimes());
-    }
+        public serverThread(int port){
+            serverSocket = new ServerSocket(port);
+            times = new ArrayList<>(); //connection times
+        }
 
     //takes as argument the number of clients it is expected to serve per test case
     //serve methid will have a loop for as many clients as specified in its argument
@@ -21,12 +22,13 @@ public class Server{
     //various clients 
     public void serve(int numClients) throws IOException{
         for(int i = 0; i < numClients; i++){
-            Socket remote = serverSocket.accept();
-            times.add(LocalDateTime.now());//adding to connected time, to track?
-            //new Thread
-
+            Socket clientSocket = serverSocket.accept();
+            synchronized(times){
+                times.add(LocalDateTime.now());//adding to connected time, to track?
+            }
+                //make a new thread
+            new ClientHandler(clientSocket).start();
         }
-
     }
 
     //returning a sorted ArrayList of LocalDateTime
@@ -43,4 +45,44 @@ public class Server{
         }
     }
 
+    private class ClientHandler extends Thread {
+        private Socket clientSocket;
+
+        public ClientHandler(Socket clientSocket) {
+            this.clientSocket = clientSocket;
+        }
+
+        @Override 
+        public void run(){
+            PrintWriter out = null;
+            BufferedReader in = null;
+
+            try {
+                out = new PrintWriter(clientSocket.getOutputStream());
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+                String request = in.readLine();
+
+                if (request != null) {
+                    String result = factorize(request);
+                    out.println(result);
+                }
+                out.close();
+                in.close();
+                clientSocket.close();
+            }
+                catch(Exception e){//IOException?
+                    e.printStackTrace();
+                }
+        }
+
+        private String factorize(String request){
+            try {
+                int number = INteger
+            }
+        }
+    }
+
 }
+
+    }
