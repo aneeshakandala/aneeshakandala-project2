@@ -5,20 +5,21 @@ import java.net.*;
 import java.util.*;
 
 public class Server{
-    public static class serverThread extends Thread {
         private ServerSocket serverSocket; 
         private ArrayList<LocalDateTime> times;
 
-        public serverThread(int port){
-            try{
+        public Server(int port) throws IOException{
             serverSocket = new ServerSocket(port);
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
             times = new ArrayList<>(); //connection times
+            // try{
+            // serverSocket = new ServerSocket(port);
+            // }
+            // catch (IOException e){
+            //     e.printStackTrace();
+            // }
+            // times = new ArrayList<>(); //connection times
 
-            }
+             }
 
     public void serve(int numClients) throws IOException{
         for(int i = 0; i < numClients; i++){
@@ -61,6 +62,7 @@ public class Server{
                 out = new PrintWriter(clientSocket.getOutputStream());
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+                out.println("handshake sent");
                 String request = in.readLine();
 
                 if (request != null) {
@@ -92,5 +94,7 @@ public class Server{
         }   
 
     }
+
 }
-}
+
+
