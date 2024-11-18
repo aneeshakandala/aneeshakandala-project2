@@ -10,7 +10,7 @@ public class Client{
 
     public Client(String host, int port) throws IOException {
         client = new Socket(host, port);
-        out = new PrintWriter(client.getOutputStream(), true);//output stream
+        out = new PrintWriter(client.getOutputStream());//output stream
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));//input stream 
 
         // Socket client = new Socket("localhost", 2021);
@@ -19,16 +19,17 @@ public class Client{
     }
 
     public void handshake() throws IOException{
-        System.out.println("12345");//initial handshake
+        out.println("12345");//initial handshake
+        out.flush();
 
-        String line = in.readLine();
+        // String line = in.readLine();
 
-        if("handshake sent".equals(line)){
-            return;
-        }
-        else{
-            throw new IOException("couldn't handshake" + line);
-        }
+        // if("handshake sent".equals(line)){
+        //     return;
+        // }
+        // else{
+        //     throw new IOException("couldn't handshake" + line);
+        // }
     }
 
     public void disconnect() throws IOException{
@@ -40,10 +41,16 @@ public class Client{
     public String request(String num) throws IOException{
         out.println(num);//sending the number to the server
         out.flush(); 
-
-        String numFactors = in.readLine();//reads response from the server.
+        String numFactors = null;
+        try{
+            numFactors = in.readLine();//reads response from the server.
+        }
+        catch (Exception e){
+            return "An exception happened";
+        }
+        return numFactors;
         //request is going to be requestiing the calculation that the server does (by itself) 
-        return "The number " + num + " has " + numFactors + " factors"; 
+        //return "The number " + num + " has " + numFactors + " factors"; 
         //ex: "The number 47483647 has 4 factors
     }
 
