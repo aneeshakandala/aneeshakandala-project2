@@ -10,7 +10,7 @@ public class Client{
 
     public Client(String host, int port) throws IOException {
         client = new Socket(host, port);
-        out = new PrintWriter(client.getOutputStream());//output stream
+        out = new PrintWriter(client.getOutputStream(), true);//output stream
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));//input stream 
 
         // Socket client = new Socket("localhost", 2021);

@@ -9,16 +9,15 @@ public class Server{
         private ArrayList<LocalDateTime> times;
 
         public Server(int port) throws IOException{
-            serverSocket = new ServerSocket(port);
-            times = new ArrayList<>(); //connection times
-            // try{
             // serverSocket = new ServerSocket(port);
-            // }
-            // catch (IOException e){
-            //     e.printStackTrace();
-            // }
             // times = new ArrayList<>(); //connection times
-
+            try{
+                serverSocket = new ServerSocket(port);
+            }
+            catch (IOException e){
+                System.out.print("Could not open server");
+            }
+            times = new ArrayList<>(); //connection times
              }
 
     public void serve(int numClients) throws IOException{
@@ -59,7 +58,7 @@ public class Server{
             BufferedReader in = null;
 
             try {
-                out = new PrintWriter(clientSocket.getOutputStream());
+                out = new PrintWriter(clientSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 out.println("handshake sent");
@@ -90,6 +89,7 @@ public class Server{
                     }
                 }
             }
+            
         return String.valueOf(count); 
         }   
 
