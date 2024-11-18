@@ -10,16 +10,16 @@ public class Server{
         private ArrayList<LocalDateTime> times;
 
         public serverThread(int port){
+            try{
             serverSocket = new ServerSocket(port);
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
             times = new ArrayList<>(); //connection times
-        }
 
-    //takes as argument the number of clients it is expected to serve per test case
-    //serve methid will have a loop for as many clients as specified in its argument
-    //after accepting a client via successful handshake, this method will process the client
-    //request in a separate(new?) thread so that the server can continue to accpet connections
-    //while these expensive factorization calculations are being performed on behalf of 
-    //various clients 
+            }
+
     public void serve(int numClients) throws IOException{
         for(int i = 0; i < numClients; i++){
             Socket clientSocket = serverSocket.accept();
@@ -64,25 +64,33 @@ public class Server{
                 String request = in.readLine();
 
                 if (request != null) {
-                    String result = factorize(request);
+                    String result = numFactors(request);
                     out.println(result);
                 }
                 out.close();
                 in.close();
                 clientSocket.close();
-            }
+                }
                 catch(Exception e){//IOException?
                     e.printStackTrace();
                 }
         }
 
-        private String factorize(String request){
-            try {
-                int number = INteger
+        private String numFactors(String request){
+            long n = Long.parseLong(request);
+            int count = 0;
+
+             for (int i=1; i * i <= n; i++){
+                if (n % i == 0){
+                    count++;
+                    if(i != n/i){
+                        count ++; 
+                    }
+                }
             }
-        }
-    }
+        return String.valueOf(count); 
+        }   
 
+    }
 }
-
-    }
+}
